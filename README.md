@@ -1,4 +1,3 @@
-# Μελισσοκομικός Σύμβουλος v133
+# Μελισσοκομικός Σύμβουλος v136
 
-AI Assistant (OpenAI/Groq). Έτοιμο για ανέβασμα σε GitHub και deploy στο Vercel.
-- Περιέχει πλήρες UI με chat, sidebar, ρυθμίσεις provider, υπογραφή.
+Fix: settings saving, Test API Key button, clearer errors. Responsive mobile UI. Default model gpt-4o-mini (GPT-5 nano).

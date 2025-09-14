@@ -1,129 +1,231 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Μελισσοκομικός Σύμβουλος v133</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Μελισσοκομικός Σύμβουλος v136</title>
 <style>
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#1e1e1e;color:#ffffff;display:flex;height:100vh}
-.sidebar{width:220px;background:#111;color:#fff;display:flex;flex-direction:column;padding:10px}
-.sidebar h3{margin-top:0;color:#d4af37}
-.sidebar ul{list-style:none;padding:0;margin:0;flex:1;overflow-y:auto}
-.sidebar li{padding:8px;border-bottom:1px solid #333;cursor:pointer}
-.sidebar li:hover{background:#222}
+:root{--bg:#0f0f10;--panel:#1e1e1f;--muted:#9aa0a6;--accent:#d4af37;--bubble-user:#3a3a3a;--bubble-bot:#171717}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column}
+.app{display:flex;flex:1;height:100vh;overflow:hidden}
+.sidebar{width:260px;background:#0b0b0c;padding:12px;border-right:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column}
+.brand{font-weight:800;color:var(--accent);font-size:18px;padding:6px 0}
+.recent{flex:1;overflow:auto;margin-top:8px}
+.recent li{list-style:none;padding:10px;border-radius:8px;margin-bottom:6px;background:transparent;color:var(--muted);cursor:pointer;border:1px solid transparent}
+.recent li:hover{background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.03);color:#fff}
 .main{flex:1;display:flex;flex-direction:column}
-.header{padding:12px;text-align:center;font-size:20px;font-weight:bold;position:relative;background:#2a2a2a}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
-.header .bee{position:absolute;left:10px;top:10px;font-size:20px}
-.chat{flex:1;overflow-y:auto;padding:20px;background:#1e1e1e}
-.message{max-width:78%;padding:14px;border-radius:12px;margin:6px 0;line-height:1.5;white-space:pre-wrap}
-.user{align-self:flex-end;background:#444;color:#fff;border:1px solid #666}
-.bot{align-self:flex-start;background:#1f1f1f;color:#fff;border:1px solid #555}
-.footer{padding:10px;text-align:center;font-size:14px;color:#aaa;background:#111}
-.input-area{display:flex;padding:12px;background:#111}
-.input{flex:1;padding:10px;border-radius:10px;border:1px solid #555;background:#2a2a2a;color:#fff}
-.btn{background:#444;border:none;padding:10px 12px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;margin-left:6px}
-.btn:hover{background:#d4af37;color:#000}
-#settingsBtn{position:absolute;right:10px;top:10px;background:#444;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer}
-#settingsBtn:hover{background:#d4af37;color:#000}
-#settingsModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center}
-#settingsContent{background:#2a2a2a;padding:20px;border-radius:12px;width:300px}
-#settingsContent input, #settingsContent select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:1px solid #555;background:#1e1e1e;color:#fff}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,0.02)}
+.header .left{display:flex;align-items:center;gap:12px}
+.bee{font-size:20px}
+.title{font-weight:700}
+.controls{display:flex;gap:8px;align-items:center}
+.btn{background:#2a2a2a;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:8px;color:#fff;cursor:pointer}
+.btn:hover{background:var(--accent);color:#000}
+.chat{flex:1;overflow:auto;padding:16px;background:linear-gradient(180deg,var(--bg),#0b0b0b);display:flex;flex-direction:column;gap:8px}
+.message{max-width:78%;padding:14px;border-radius:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.user{align-self:flex-end;background:var(--bubble-user);border:1px solid rgba(255,255,255,0.03)}
+.bot{align-self:flex-start;background:var(--bubble-bot);border:1px solid rgba(255,255,255,0.04)}
+.footer{padding:10px;text-align:center;font-size:13px;color:var(--muted);background:#070707}
+.inputArea{display:flex;gap:8px;padding:12px;background:var(--panel);align-items:center}
+.input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#121212;color:#fff}
+.select{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#121212;color:#fff}
+.small{font-size:13px;color:var(--muted)}
+
+/* Responsive */
+@media (max-width: 800px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:40;transform:translateX(-110%);transition:transform .22s ease;box-shadow:2px 0 20px rgba(0,0,0,0.6)}
+  .sidebar.open{transform:translateX(0)}
+  .toggleSidebar{display:inline-block}
+  .app{flex-direction:column}
+  .header{position:sticky;top:0;z-index:30}
+  .chat{padding:12px}
+  .recent{display:none}
+  .footer{font-size:12px}
+}
+.info{font-size:13px;color:var(--muted);margin-top:8px}
+.error{color:#ffb3b3;background:#3a1a1a;padding:8px;border-radius:8px;margin-top:8px}
+.success{color:#0b3b0b;background:#bff1c6;padding:8px;border-radius:8px;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="sidebar">
-  <h3>Πρόσφατα</h3>
-  <ul id="recentList"></ul>
-</div>
-<div class="main">
-  <div class="header">
-    <span class="bee">🐝</span>Μελισσοκομικός Σύμβουλος
-    <button id="settingsBtn">Ρυθμίσεις</button>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Πρόσφατες ερωτήσεις">
+    <div class="brand">Μελισσοκομικός Σύμβουλος</div>
+    <div class="small">Πρόσφατες ερωτήσεις</div>
+    <ul class="recent" id="recentList"></ul>
+    <div style="margin-top:12px"><button id="openSettings" class="btn">Ρυθμίσεις</button></div>
+  </aside>
+  <div class="main">
+    <div class="header">
+      <div class="left"><button class="toggleSidebar btn" id="toggleBtn">☰</button><span class="bee">🐝</span><div class="title">Μελισσοκομικός Σύμβουλος</div></div>
+      <div class="controls">
+        <div class="small">Model:</div>
+        <select id="modelSelect" class="select" aria-label="Επιλογή μοντέλου">
+          <option value="gpt-4o-mini">gpt-4o-mini (GPT-5 nano)</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Groq)</option>
+          <option value="llama-3.1-70b-versatile">llama-3.1-70b-versatile (Groq)</option>
+        </select>
+        <button id="settingsBtn" class="btn">Ρυθμίσεις</button>
+      </div>
+    </div>
+    <div id="chat" class="chat" role="log" aria-live="polite"></div>
+    <div class="inputArea">
+      <input id="userInput" class="input" placeholder="Ρώτησε οτιδήποτε για μελισσοκομία..." aria-label="Ερώτηση"/>
+      <button id="sendBtn" class="btn">Στείλε</button>
+    </div>
+    <div class="footer">Μελισσοκομικός Σύμβουλος – ✍️ Αθανάσιος Γεροντάκης</div>
   </div>
-  <div id="chat" class="chat"></div>
-  <div class="input-area">
-    <input id="userInput" class="input" placeholder="Ρώτησε οτιδήποτε για μελισσοκομία..."/>
-    <button onclick="send()" class="btn">Στείλε</button>
-  </div>
-  <div class="footer">Μελισσοκομικός Σύμβουλος – ✍️ Αθανάσιος Γεροντάκης</div>
 </div>
 
-<div id="settingsModal">
-  <div id="settingsContent">
-    <h3>Ρυθμίσεις API</h3>
-    <label>Provider:</label>
-    <select id="providerSelect">
+<!-- Settings modal -->
+<div id="settingsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center">
+  <div style="background:#1b1b1b;padding:18px;border-radius:12px;width:320px;color:#fff">
+    <h3>Ρυθμίσεις</h3>
+    <label class="small">Provider</label>
+    <select id="providerSelect" class="select">
       <option value="openai">OpenAI</option>
       <option value="groq">Groq</option>
     </select>
-    <label>API Key:</label>
-    <input id="apiKeyInput" type="text" placeholder="sk-... ή gsk_..."/>
-    <button onclick="saveSettings()" class="btn">Αποθήκευση</button>
+    <label class="small">API Key</label>
+    <input id="apiKeyInput" type="text" class="input" placeholder="sk-... ή gsk_..."/>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="testKeyBtn" class="btn">Δοκίμασε το κλειδί</button>
+      <button id="saveSettingsBtn" class="btn">Αποθήκευση</button>
+    </div>
+    <div id="keyStatus" class="info"></div>
+    <div style="margin-top:10px;font-size:12px;color:var(--muted)">Σημείωση: Αν χρησιμοποιείς OpenAI, βάλτε το sk-... key. Για Groq, βάλτε gsk_... και διάλεξε Groq provider.</div>
   </div>
 </div>
 
 <script>
-document.getElementById("settingsBtn").onclick=function(){
-  document.getElementById("settingsModal").style.display="flex";
-  document.getElementById("providerSelect").value=localStorage.getItem("provider")||"openai";
-  document.getElementById("apiKeyInput").value=localStorage.getItem("api_key")||"";
-};
-function saveSettings(){
-  localStorage.setItem("provider",document.getElementById("providerSelect").value);
-  localStorage.setItem("api_key",document.getElementById("api_key").value.trim());
-  document.getElementById("settingsModal").style.display="none";
+// UI interactions
+const sidebar = document.getElementById('sidebar');
+document.getElementById('toggleBtn').addEventListener('click', ()=> sidebar.classList.toggle('open'));
+document.getElementById('settingsBtn').addEventListener('click', ()=> showSettings());
+document.getElementById('openSettings').addEventListener('click', ()=> showSettings());
+document.getElementById('saveSettingsBtn').addEventListener('click', ()=> saveSettings());
+document.getElementById('testKeyBtn').addEventListener('click', ()=> testKey());
+document.getElementById('sendBtn').addEventListener('click', ()=> sendMessage());
+document.getElementById('userInput').addEventListener('keydown', (e)=> { if(e.key==='Enter') sendMessage(); });
+
+function showSettings(){
+  document.getElementById('settingsModal').style.display='flex';
+  document.getElementById('providerSelect').value = localStorage.getItem('provider') || 'openai';
+  document.getElementById('apiKeyInput').value = localStorage.getItem('api_key') || '';
+  document.getElementById('modelSelect').value = localStorage.getItem('default_model') || 'gpt-4o-mini';
 }
-async function send(){
-  const input=document.getElementById("userInput");
-  const text=input.value.trim();
-  if(!text) return;
-  addMessage(text,"user");
-  input.value="";
-  addRecent(text);
-  addMessage("⏳ Γίνεται ανάλυση...","bot");
+function hideSettings(){ document.getElementById('settingsModal').style.display='none'; }
+
+function saveSettings(){
+  const provider = document.getElementById('providerSelect').value;
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if(!key){ showKeyStatus('Παρακαλώ εισάγετε ένα API key πριν την αποθήκευση.','error'); return; }
+  localStorage.setItem('provider', provider);
+  localStorage.setItem('api_key', key);
+  localStorage.setItem('default_model', document.getElementById('modelSelect').value);
+  hideSettings();
+  addSystemMessage('⚙️ Ρυθμίσεις αποθηκεύτηκαν.');
+}
+
+function showKeyStatus(msg, cls){
+  const el = document.getElementById('keyStatus');
+  el.innerText = msg;
+  el.className = cls==='error' ? 'error' : (cls==='success' ? 'success' : 'info');
+}
+
+// Test API key function: calls provider test endpoint
+async function testKey(){
+  const provider = document.getElementById('providerSelect').value;
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if(!key){ showKeyStatus('Πρέπει να βάλεις API key για δοκιμή.','error'); return; }
+  showKeyStatus('Δοκιμή κλειδιού...');
   try{
-    const provider=localStorage.getItem("provider");
-    const apiKey=localStorage.getItem("api_key");
-    if(!provider||!apiKey){
-      addMessage("⚠️ Ρύθμισε πρώτα Provider και API Key.","bot");
-      return;
+    if(provider==='openai'){
+      const r = await fetch('https://api.openai.com/v1/models', {headers:{'Authorization':'Bearer '+key}});
+      const j = await r.json();
+      if(r.status===200) { showKeyStatus('Το OpenAI key φαίνεται έγκυρο.','success'); return; }
+      else { showKeyStatus('OpenAI error: '+(j.error?.message || JSON.stringify(j)),'error'); return; }
+    } else {
+      const r = await fetch('https://api.groq.com/v1/models', {headers:{'Authorization':'Bearer '+key}});
+      const j = await r.json();
+      if(r.status===200) { showKeyStatus('Το Groq key φαίνεται έγκυρο.','success'); return; }
+      else { showKeyStatus('Groq error: '+(j.error?.message || JSON.stringify(j)),'error'); return; }
     }
-    let url="https://api.openai.com/v1/chat/completions";
-    if(provider==="groq"){
-      url="https://api.groq.com/openai/v1/chat/completions";
-    }
-    const resp=await fetch(url,{
-      method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":`Bearer ${apiKey}`},
-      body:JSON.stringify({
-        model:"gpt-4o-mini",
-        messages:[
-          {role:"system",content:"Είσαι ειδικός μελισσοκομίας. Δίνεις πάντα μεγάλες, αναλυτικές απαντήσεις στα ελληνικά, σαν δάσκαλος."},
-          {role:"user",content:text}
-        ],
-        max_tokens:800
-      })
-    });
-    const data=await resp.json();
-    const answer=data.choices?.[0]?.message?.content||"Δεν βρέθηκε απάντηση";
-    addMessage(answer,"bot");
-  }catch(e){
-    addMessage("⚠️ Σφάλμα: "+e.message,"bot");
+  }catch(err){
+    showKeyStatus('Σφάλμα δικτύου/κλειδιού: '+err.message,'error');
   }
 }
-function addMessage(text,cls){
-  const div=document.createElement("div");
-  div.className="message "+cls;
-  div.innerText=text;
-  document.getElementById("chat").appendChild(div);
-  div.scrollIntoView();
+
+// Chat helpers
+function addSystemMessage(text){ addMessage(text,'bot'); }
+function addMessage(text, cls='bot'){
+  const el = document.createElement('div');
+  el.className = 'message ' + cls;
+  el.innerText = text;
+  document.getElementById('chat').appendChild(el);
+  el.scrollIntoView({behavior:'smooth',block:'end'});
 }
 function addRecent(q){
-  let list=document.getElementById("recentList");
-  let li=document.createElement("li");
-  li.innerText=q;
-  li.onclick=function(){document.getElementById("userInput").value=q;};
-  list.insertBefore(li,list.firstChild);
+  const li = document.createElement('li');
+  li.innerText = q;
+  li.onclick = ()=> { document.getElementById('userInput').value = q; hideSettings(); sidebar.classList.remove('open'); };
+  document.getElementById('recentList').insertBefore(li, document.getElementById('recentList').firstChild);
+}
+
+// Send message
+async function sendMessage(){
+  const text = document.getElementById('userInput').value.trim();
+  if(!text) return;
+  addMessage(text,'user');
+  document.getElementById('userInput').value='';
+  addRecent(text);
+  addMessage('⏳ Γίνεται επεξεργασία...','bot');
+
+  const provider = localStorage.getItem('provider') || 'openai';
+  const apiKey = localStorage.getItem('api_key') || '';
+  const selectedModel = document.getElementById('modelSelect').value || (localStorage.getItem('default_model') || 'gpt-4o-mini');
+  if(!apiKey){
+    addMessage('⚠️ Βάλε API Key από τις Ρυθμίσεις (OpenAI sk-... ή Groq gsk_...).','bot');
+    return;
+  }
+
+  let url = 'https://api.openai.com/v1/chat/completions';
+  let payloadModel = selectedModel;
+  if(provider === 'groq'){
+    url = 'https://api.groq.com/openai/v1/chat/completions';
+    if(selectedModel.startsWith('gpt')) payloadModel = 'llama-3.1-8b-instant';
+  }
+
+  try{
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization': 'Bearer ' + apiKey},
+      body: JSON.stringify({
+        model: payloadModel,
+        messages: [
+          {role:'system', content:'Είσαι ειδικός μελισσοκομίας. Δίνεις πάντα μεγάλες, αναλυτικές απαντήσεις στα ελληνικά, σαν δάσκαλος.'},
+          {role:'user', content: text}
+        ],
+        max_tokens: 900
+      })
+    });
+    const data = await resp.json();
+    if(resp.status >= 400){
+      console.error('API error', data);
+      addMessage('⚠️ Σφάλμα API: ' + (data.error?.message || JSON.stringify(data)), 'bot');
+      return;
+    }
+    const ans = data.choices?.[0]?.message?.content || data?.output?.[0]?.content || null;
+    if(!ans){
+      addMessage('⚠️ Δεν βρέθηκε απάντηση από το μοντέλο.', 'bot');
+      return;
+    }
+    addMessage(ans, 'bot');
+  }catch(err){
+    console.error(err);
+    addMessage('⚠️ Σύνδεση απέτυχε: ' + err.message, 'bot');
+  }
 }
 </script>
 </body>
